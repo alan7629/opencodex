@@ -344,3 +344,17 @@ reviewers (Codex, CodeRabbit).
   keep translated locales from contradicting the English source).
 - **Privacy:** `bun run privacy:scan` must stay green; never introduce logging
   of request bodies, API keys, or account identifiers.
+
+---
+
+## 跨專案工作方針：Local-first 驗證與 GitHub Actions 額度（2026-10-17）
+
+本規範適用於後續各種 Codex／AI Agent 工程任務。它是**資源與驗收策略**，不取代各專案更嚴格的安全、資料正確性、測試、分支、PR 與發版規則。
+
+1. **先本機驗證**：開工先同步 GitHub 的預設／整合分支、Issue、PR、CI 和本機工作樹；使用隔離分支／worktree，按專案現行 workflow／驗收文件實際執行可用的 build、單元、回歸、整合及瀏覽器測試。跨 Windows／Android／Linux 或真機項目未實測就標記「未驗證」，不可假報成功。
+2. **避免浪費 Actions**：小改動先在本機反覆測試，將合理的工作批次提交同一 PR；不為取得綠燈反覆 rerun、重複上傳大型 Artifact 或無必要地手動 dispatch。若調整 workflow，先查既有修正與 required checks，使用最小修正及 PR-native 流程；不得逕自停用必要檢查、修改 Repo 設定或預算。
+3. **必要閘門不能省**：資料完整性、安全與回歸、官方答案、跨科／跨模組整合及必要 Windows／Android／正式發版驗收，仍依個別專案規範執行。整合或發版候選在合併／部署前，需要該候選 **exact SHA** 的必要環境測試證據；本機成功不等於 Hosted CI 成功。
+4. **額度不足時**：優先在隔離的本機環境執行相同或等效可行的測試，於 PR 標記 `HOSTED_CI_NOT_RUN`、`BLOCKED` 與尚缺的閘門；不得把未執行、skipped 或舊 SHA 的成功視為最新版本通過，也不得在必要閘門缺失時宣稱可合併／可發版。
+5. **PR 留證據**：記錄 base/head、exact SHA、系統／依賴版本、測試命令、exit code、結果、log／雜湊、未執行項目與理由，讓下一位 Agent 能獨立接手。帳號免費分鐘只以 GitHub Billing 當期數據確認，Job 執行時長與 Artifact 儲存量不等於實際帳單扣額。
+
+此規範僅約束**如何可靠且節省額度地驗證**，不能作為跳過既有 PR Review、保護規則或安全授權的理由。
